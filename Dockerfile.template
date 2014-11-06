@@ -1,0 +1,23 @@
+FROM phusion/baseimage
+MAINTAINER sam@fcgmedia.com
+
+# Prepping Ruby install
+RUN apt-get update
+RUN apt-get install -y autoconf bison build-essential curl git zlib1g-dev libssl-dev \
+  libreadline6-dev libyaml-dev libxml2-dev libxslt-dev libpq-dev libncurses5-dev && \
+  apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Installing rbenv w/ ruby-build
+RUN git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
+RUN git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+RUN echo 'export PATH="$HOME/.rbenv/bin:$PATH"; eval "$(rbenv init -)"' >> ~/.bash_profile
+ENV PATH /root/.rbenv/bin:/root/.rbenv/shims:$PATH
+
+# Install Ruby
+ENV CONFIGURE_OPTS --disable-install-doc
+RUN rbenv install RUBY_VERSION && rbenv global RUBY_VERSION && rbenv init -
+
+# Install Bundler
+RUN echo 'gem: --no-rdoc --no-ri' >> /root/.gemrc
+RUN gem install bundler rubygems-update && rbenv rehash
+ADD home/bash_profile /root/.bash_profile

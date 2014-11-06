@@ -1,0 +1,11 @@
+export LANG=en_US.UTF-8
+export HISTSIZE=10000
+export EDITOR=vim
+export PAGER=less
+export TERM=xterm
+
+export PS1='$PWD> '
+alias ll='ls -al'
+alias grep='grep --colour=auto'
+alias sane='echo -e "\\033c";tput is2;stty sane line 1'
+[[ -f ~/.bashrc ]] && . ~/.bashrc
